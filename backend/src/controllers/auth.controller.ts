@@ -1,9 +1,9 @@
 import { Response } from 'express'
-import { AuthRequest } from '../types'
+import { Request } from 'express'
 import * as authService from '../services/auth.service'
 import { sendSuccess, sendError } from '../utils/apiResponse.util'
 
-export const register = async (req: AuthRequest, res: Response) => {
+export const register = async (req: Request, res: Response) => {
   try {
     const user = await authService.registerUser(req.body)
     sendSuccess(res, user, 'Registration successful', 201)
@@ -12,7 +12,7 @@ export const register = async (req: AuthRequest, res: Response) => {
   }
 }
 
-export const login = async (req: AuthRequest, res: Response) => {
+export const login = async (req: Request, res: Response) => {
   try {
     const result = await authService.loginUser(req.body)
     sendSuccess(res, result, 'Login successful')
@@ -21,7 +21,7 @@ export const login = async (req: AuthRequest, res: Response) => {
   }
 }
 
-export const refreshToken = async (req: AuthRequest, res: Response): Promise<void> => {
+export const refreshToken = async (req: Request, res: Response): Promise<void> => {
   try {
     const { refreshToken } = req.body
     if (!refreshToken) {
@@ -35,7 +35,7 @@ export const refreshToken = async (req: AuthRequest, res: Response): Promise<voi
   }
 }
 
-export const logout = async (req: AuthRequest, res: Response) => {
+export const logout = async (req: Request, res: Response) => {
   try {
     const { refreshToken } = req.body
     await authService.logoutUser(req.userId!, refreshToken)
@@ -45,7 +45,7 @@ export const logout = async (req: AuthRequest, res: Response) => {
   }
 }
 
-export const logoutAll = async (req: AuthRequest, res: Response) => {
+export const logoutAll = async (req: Request, res: Response) => {
   try {
     await authService.logoutAllDevices(req.userId!)
     sendSuccess(res, null, 'Logged out from all devices')
@@ -54,7 +54,7 @@ export const logoutAll = async (req: AuthRequest, res: Response) => {
   }
 }
 
-export const me = async (req: AuthRequest, res: Response) => {
+export const me = async (req: Request, res: Response) => {
   try {
     const user = await authService.getMe(req.userId!)
     sendSuccess(res, user)

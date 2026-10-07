@@ -1,9 +1,3 @@
-import { Request } from 'express'
-
-export interface AuthRequest extends Request {
-  userId?: string
-}
-
 export interface ApiSuccessResponse<T> {
   success: true
   data: T
@@ -15,6 +9,8 @@ export interface ApiErrorResponse {
   error: string
   statusCode: number
 }
+
+export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse
 
 export interface PaginatedResult<T> {
   items: T[]

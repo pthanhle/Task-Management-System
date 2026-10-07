@@ -1,9 +1,9 @@
 import { Response } from 'express'
-import { AuthRequest } from '../types'
+import { Request } from 'express'
 import * as dashboardService from '../services/dashboard.service'
 import { sendSuccess, sendError } from '../utils/apiResponse.util'
 
-export const getStats = async (req: AuthRequest, res: Response) => {
+export const getStats = async (req: Request, res: Response) => {
   try {
     const stats = await dashboardService.getDashboardStats(req.userId!)
     sendSuccess(res, stats)

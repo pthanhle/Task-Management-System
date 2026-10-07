@@ -1,9 +1,9 @@
 import { Response, NextFunction } from 'express'
-import { AuthRequest } from '../types'
+import { Request } from 'express'
 import { verifyAccessToken } from '../utils/jwt.util'
 import { sendError } from '../utils/apiResponse.util'
 
-export const authenticate = (req: AuthRequest, res: Response, next: NextFunction) => {
+export const authenticate = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization
   if (!authHeader?.startsWith('Bearer ')) {
     sendError(res, 'Unauthorized', 401)
