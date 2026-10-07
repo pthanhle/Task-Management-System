@@ -11,7 +11,6 @@ secrets/
 # Markdown files
 *.md
 !README.md
-!AGENTS.md
 
 # Node modules
 node_modules/
