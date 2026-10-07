@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import morgan from 'morgan'
+import mongoSanitize from 'express-mongo-sanitize'
 import swaggerUi from 'swagger-ui-express'
 import { env } from './config/env.config'
 import { connectDB } from './config/db.config'
@@ -17,7 +18,8 @@ app.use(helmet())
 app.use(cors({ origin: env.FRONTEND_URL, credentials: true }))
 app.use(morgan(env.NODE_ENV === 'production' ? 'combined' : 'dev'))
 app.use(express.json({ limit: '10kb' }))
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true, limit: '10kb' }))
+app.use(mongoSanitize())
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
@@ -31,7 +33,9 @@ const start = async () => {
   await connectDB()
   app.listen(env.PORT, () => {
     console.log(`Server running on port ${env.PORT} in ${env.NODE_ENV} mode`)
-    console.log(`Swagger docs: http://localhost:${env.PORT}/api-docs`)
+    if (env.NODE_ENV !== 'production') {
+      console.log(`Swagger docs: http://localhost:${env.PORT}/api-docs`)
+    }
   })
 }
 

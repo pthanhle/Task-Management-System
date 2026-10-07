@@ -2,6 +2,8 @@ import { z } from 'zod'
 
 const TaskStatusEnum = z.enum(['TODO', 'IN_PROGRESS', 'DONE'])
 const TaskPriorityEnum = z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT'])
+const SortOrderEnum = z.enum(['asc', 'desc']).default('desc')
+const SortByEnum = z.enum(['createdAt', 'dueDate', 'priority', 'order']).default('createdAt')
 
 export const createTaskSchema = z.object({
   body: z.object({
@@ -10,7 +12,7 @@ export const createTaskSchema = z.object({
     status: TaskStatusEnum.default('TODO'),
     priority: TaskPriorityEnum.default('MEDIUM'),
     dueDate: z.string().datetime().optional(),
-    tags: z.array(z.string()).default([]),
+    tags: z.array(z.string().max(50)).max(10).default([]),
   }),
 })
 
@@ -22,7 +24,7 @@ export const updateTaskSchema = z.object({
     status: TaskStatusEnum.optional(),
     priority: TaskPriorityEnum.optional(),
     dueDate: z.string().datetime().optional(),
-    tags: z.array(z.string()).optional(),
+    tags: z.array(z.string().max(50)).max(10).optional(),
   }),
 })
 
@@ -33,13 +35,16 @@ export const updateTaskStatusSchema = z.object({
 
 export const reorderTasksSchema = z.object({
   body: z.object({
-    taskOrders: z.array(
-      z.object({
-        id: z.string(),
-        order: z.number().int().nonnegative(),
-        status: TaskStatusEnum,
-      })
-    ),
+    taskOrders: z
+      .array(
+        z.object({
+          id: z.string(),
+          order: z.number().int().nonnegative(),
+          status: TaskStatusEnum,
+        })
+      )
+      .min(1)
+      .max(500),
   }),
 })
 
@@ -47,9 +52,12 @@ export const getTasksQuerySchema = z.object({
   query: z.object({
     status: TaskStatusEnum.optional(),
     priority: TaskPriorityEnum.optional(),
-    search: z.string().optional(),
-    page: z.coerce.number().positive().default(1),
-    limit: z.coerce.number().positive().max(100).default(10),
+    search: z.string().max(200).optional(),
+    tags: z.string().optional(),
+    sortBy: SortByEnum,
+    sortOrder: SortOrderEnum,
+    page: z.coerce.number().int().positive().default(1),
+    limit: z.coerce.number().int().positive().max(100).default(10),
   }),
 })
 

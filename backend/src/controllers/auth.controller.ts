@@ -45,6 +45,15 @@ export const logout = async (req: AuthRequest, res: Response) => {
   }
 }
 
+export const logoutAll = async (req: AuthRequest, res: Response) => {
+  try {
+    await authService.logoutAllDevices(req.userId!)
+    sendSuccess(res, null, 'Logged out from all devices')
+  } catch {
+    sendError(res, 'Logout failed', 400)
+  }
+}
+
 export const me = async (req: AuthRequest, res: Response) => {
   try {
     const user = await authService.getMe(req.userId!)

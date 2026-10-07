@@ -28,7 +28,7 @@ export const loginUser = async (input: LoginInput) => {
   const refreshToken = signRefreshToken(user._id.toString())
 
   await UserModel.findByIdAndUpdate(user._id, {
-    $push: { refreshTokens: refreshToken },
+    $push: { refreshTokens: { $each: [refreshToken], $slice: -10 } },
   })
 
   return {
@@ -43,21 +43,35 @@ export const loginUser = async (input: LoginInput) => {
   }
 }
 
-export const refreshUserToken = async (refreshToken: string) => {
-  const decoded = verifyRefreshToken(refreshToken)
+export const refreshUserToken = async (oldRefreshToken: string) => {
+  const decoded = verifyRefreshToken(oldRefreshToken)
   const user = await UserModel.findById(decoded.userId)
-  if (!user || !user.refreshTokens.includes(refreshToken)) {
+
+  if (!user || !user.refreshTokens.includes(oldRefreshToken)) {
     throw new Error('Invalid refresh token')
   }
 
   const newAccessToken = signAccessToken(user._id.toString())
-  return { accessToken: newAccessToken }
+  const newRefreshToken = signRefreshToken(user._id.toString())
+
+  await UserModel.findByIdAndUpdate(user._id, {
+    $pull: { refreshTokens: oldRefreshToken },
+  })
+  await UserModel.findByIdAndUpdate(user._id, {
+    $push: { refreshTokens: { $each: [newRefreshToken], $slice: -10 } },
+  })
+
+  return { accessToken: newAccessToken, refreshToken: newRefreshToken }
 }
 
 export const logoutUser = async (userId: string, refreshToken: string) => {
   await UserModel.findByIdAndUpdate(userId, {
     $pull: { refreshTokens: refreshToken },
   })
+}
+
+export const logoutAllDevices = async (userId: string) => {
+  await UserModel.findByIdAndUpdate(userId, { refreshTokens: [] })
 }
 
 export const getMe = async (userId: string) => {

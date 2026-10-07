@@ -45,7 +45,7 @@ export const deleteTask = async (req: AuthRequest, res: Response) => {
     await taskService.deleteTask(req.params.id, req.userId!)
     sendSuccess(res, null, 'Task deleted')
   } catch (err) {
-    sendError(res, err instanceof Error ? err.message : 'Failed to delete task', 400)
+    sendError(res, err instanceof Error ? err.message : 'Failed to delete task', 404)
   }
 }
 
@@ -58,7 +58,7 @@ export const updateTaskStatus = async (req: AuthRequest, res: Response) => {
     )
     sendSuccess(res, task, 'Status updated')
   } catch (err) {
-    sendError(res, err instanceof Error ? err.message : 'Failed to update status', 400)
+    sendError(res, err instanceof Error ? err.message : 'Failed to update status', 404)
   }
 }
 
