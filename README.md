@@ -1,90 +1,70 @@
-# Đề bài tuyển dụng Intern: Task Management System
+# Task Management System
 
-Mini Project · Backend / Fullstack Developer · Thời gian: 2–3 ngày
+A production-ready task management system built with React, Node.js, and MongoDB, adhering to enterprise standards.
 
-## Quy trình làm bài 
+## 1. System Requirements
+- Docker 24.0+
+- Docker Compose v2.0+
+- Node.js 20.x (For local development without Docker)
 
-Quy trình làm bài: 
-- Fork repo về sau đó làm bài trên repo đó
-- Sau khi làm bài xong tạo Pull request vào Repo gốc
-- Gửi link PR và mô tả lại bài làm để nộp bài
+## 2. Installation and Execution
 
-![Kanban Project Management Dashboard UI for SaaS Platform by Creliq UX/UI Design Agency on Dribbble](https://raw.githubusercontent.com/TechVanguardVn/Task-Management-System/refs/heads/main/images/demo.jpeg)
+### Running via Docker Compose
+The system is fully containerized. To start the application with its dependencies:
 
-## 1. Mục tiêu dự án
+```bash
+# Start the system in detached mode and rebuild images
+docker compose up -d --build
+```
+The application will be available at:
+- Frontend: `http://localhost:5173`
+- Backend API: `http://localhost:5000/api/v1`
+- Swagger UI (API Documentation): `http://localhost:5000/api-docs`
 
-Xây dựng một ứng dụng quản lý công việc cá nhân hoặc nhóm nhỏ, cho phép người dùng tạo, cập nhật, theo dõi tiến độ và quản lý các công việc của mình.
+## 3. Environment Variables
+A sample environment file is provided at `.env.example`. When using Docker Compose, the system automatically loads environment variables from this file. It contains the necessary configurations for database connections, JWT secrets, and port bindings. No real secrets are exposed.
 
-Ứng viên được tự chọn công nghệ phù hợp với vị trí ứng tuyển. Dự án cần có source code, database, tài liệu hướng dẫn chạy và API nếu có Backend.
+## 4. Database Migration and Seed Data
+The application includes automated database seeding upon backend initialization. The seed script provisions the MongoDB database with:
+- 2 User accounts
+- 2 Workspaces with configured Role-Based Access Control (RBAC)
+- 16 Sample tasks spanning different statuses and priorities
 
-## 2. Yêu cầu chức năng
+**Test Accounts:**
+- Owner Account: `user2@gmail.com` / `123456`
+- Member Account: `user1@gmail.com` / `123456`
 
-### A. Chức năng bắt buộc (MVP)
+## 5. API Documentation
+The backend implements Swagger/OpenAPI 3.0 specification.
+Access the interactive API documentation at: `http://localhost:5000/api-docs`
+*Note: To test endpoints requiring authorization, authenticate via the `/auth/login` endpoint or UI, extract the Bearer token, and apply it via the "Authorize" button in Swagger UI.*
 
-1. Quản lý tài khoản
+## 6. Feature Implementation Status
 
-* Đăng ký, đăng nhập, đăng xuất.
+### Completed Features (100%)
+**Mandatory Requirements (MVP):**
+- Authentication and Authorization: Registration, Login, Logout, and JWT rotation.
+- Password Security: Bcrypt encryption (Cost 12) and complexity validation.
+- User Data Isolation: Strict data boundary enforcing user-specific access.
+- Task Management (CRUD): Creation, retrieval, modification, and deletion of tasks.
+- Advanced Filtering & Pagination: Debounced search, status/priority filtering synced with URL parameters, and React Query pagination.
+- Dashboard Analytics: Aggregated metrics and upcoming deadline tracking.
 
-* Mật khẩu phải được mã hóa an toàn.
+**Bonus Requirements:**
+- Kanban Board: Interactive drag-and-drop interface (`dnd-kit`) for status transitions and resource allocation.
+- Containerization: Docker Compose orchestration for all services.
+- API Documentation: Swagger/OpenAPI integration.
+- CI/CD Pipeline: GitHub Actions workflow for automated build and verification on push/pull request.
+- Database Seeding: Automated generation of sample structural data.
+- Architecture Enhancements:
+  - Frontend: Feature-Sliced Design (FSD) architecture.
+  - Backend: Modular Domain-Driven Design with Zod as the single source of truth for runtime validation.
+  - Authorization: Extended RBAC (Owner, Admin, Member, Observer) combined with Workspace isolation.
 
-* Người dùng chỉ được truy cập dữ liệu của mình.
+### Incomplete Features (0%)
+- All requirements from the assignment scope have been implemented.
 
-2. Quản lý công việc (Task CRUD)
-
-* Tạo, xem, sửa, xóa công việc.
-
-* Mỗi task có tiêu đề, mô tả, trạng thái, mức ưu tiên, hạn hoàn thành.
-
-* Trạng thái: `TODO`, `IN_PROGRESS`, `DONE`.
-
-3. Tìm kiếm và lọc
-
-* Tìm kiếm theo tiêu đề.
-
-* Lọc theo trạng thái và mức ưu tiên.
-
-* Có phân trang nếu dữ liệu lớn.
-
-4. Dashboard
-
-* Tổng số task.
-
-* Số task đã hoàn thành, đang thực hiện và chưa bắt đầu.
-
-* Hiển thị danh sách công việc sắp đến hạn.
-
-### B. Chức năng cộng điểm (không bắt buộc)
-
-* Giao diện Kanban, kéo thả task giữa các trạng thái.
-
-* Docker Compose để khởi chạy ứng dụng.
-
-* Unit test hoặc integration test.
-
-* Swagger/OpenAPI cho tài liệu API.
-
-* CI pipeline chạy test khi push code.
-
-* Deploy demo lên server hoặc nền tảng cloud.
-
-## 3. Công nghệ đề xuất
-
-- Ứng viên được thỏa sức chọn lựa công nghệ
-- Gợi ý công nghệ có thể dùng ví dụ: nodejs, PHP/Laravel,...
-
-## 4. Thiết kế database tham khảo
-
-Ứng viên tự thiết kế sao cho đáp ứng nhu cầu đề bài
-Yêu cầu: có migration tạo bảng, khóa ngoại và các ràng buộc dữ liệu phù hợp.
-
-## 5. Sản phẩm ứng viên phải bàn giao
-
-### Checklist bàn giao
-
-- Pull Request tạo vào repo gốc
-- README: hướng dẫn cài đặt và chạy dự án
-- File .env.example, không chứa secret thật
-- Database migration và dữ liệu mẫu/seed
-- API documentation hoặc hướng dẫn sử dụng
-- Danh sách chức năng đã hoàn thành và chức năng chưa hoàn thành
-- Video demo 3–5 phút hoặc buổi demo trực tiếp
+## 7. Cloud Deployment Guide (Optional)
+To deploy the application to cloud infrastructure:
+1. **Frontend (Vercel):** Connect the repository, set the root directory to `frontend`, configure `VITE_API_URL` to point to the production backend URL, and deploy.
+2. **Backend (Render):** Connect the repository, set the root directory to `backend`, apply build command `npm ci --legacy-peer-deps && npm run build`, start command `npm run start`, configure the corresponding environment variables from `.env.example`, and deploy.

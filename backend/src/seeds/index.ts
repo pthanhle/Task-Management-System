@@ -1,62 +1,41 @@
 import mongoose from 'mongoose'
-import dotenv from 'dotenv'
-import bcrypt from 'bcryptjs'
-import { UserModel } from '../models/User.model'
-import { TaskModel } from '../models/Task.model'
-
-dotenv.config()
-
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/task-management'
-
-const users = [
-  { email: 'alice@example.com', password: 'Password123', fullName: 'Alice Nguyen' },
-  { email: 'bob@example.com', password: 'Password123', fullName: 'Bob Tran' },
-]
-
-const taskTemplates = [
-  { title: 'Set up project repository', status: 'DONE', priority: 'HIGH', order: 0 },
-  { title: 'Design database schema', status: 'DONE', priority: 'HIGH', order: 1 },
-  { title: 'Implement authentication API', status: 'IN_PROGRESS', priority: 'URGENT', order: 0 },
-  { title: 'Build task management CRUD', status: 'IN_PROGRESS', priority: 'HIGH', order: 1 },
-  { title: 'Implement Kanban drag and drop', status: 'TODO', priority: 'MEDIUM', order: 0, daysFromNow: 3 },
-  { title: 'Write unit tests for auth service', status: 'TODO', priority: 'MEDIUM', order: 1, daysFromNow: 5 },
-  { title: 'Set up Docker Compose', status: 'TODO', priority: 'LOW', order: 2, daysFromNow: 7 },
-  { title: 'Create API documentation', status: 'TODO', priority: 'LOW', order: 3, daysFromNow: 9 },
-]
+import { connectDB } from '@shared/config/db.config'
+import { UserModel } from '@modules/auth/user.model'
+import { TaskModel } from '@modules/tasks/task.model'
+import { hashPassword } from '@shared/utils/hash.util'
 
 const seed = async () => {
-  await mongoose.connect(MONGODB_URI)
+  await connectDB()
 
   await UserModel.deleteMany({})
   await TaskModel.deleteMany({})
 
-  for (const userData of users) {
-    const hashed = await bcrypt.hash(userData.password, 12)
-    const user = await UserModel.create({
-      email: userData.email,
-      password: hashed,
-      fullName: userData.fullName,
-    })
+  const hashedPassword = await hashPassword('Password123!')
 
-    await Promise.all(
-      taskTemplates.map(template => {
-        const dueDate = template.daysFromNow
-          ? new Date(Date.now() + template.daysFromNow * 24 * 60 * 60 * 1000)
-          : undefined
-        return TaskModel.create({
-          title: template.title,
-          status: template.status,
-          priority: template.priority,
-          order: template.order,
-          userId: user._id,
-          dueDate,
-        })
-      })
-    )
-  }
+  const [alice, bob] = await UserModel.insertMany([
+    { email: 'alice@example.com', password: hashedPassword, fullName: 'Alice Johnson' },
+    { email: 'bob@example.com', password: hashedPassword, fullName: 'Bob Smith' },
+  ])
 
-  console.log('Seed completed: 2 users, 8 tasks each')
-  await mongoose.disconnect()
+  const statuses = ['TODO', 'IN_PROGRESS', 'DONE'] as const
+  const priorities = ['LOW', 'MEDIUM', 'HIGH', 'URGENT'] as const
+
+  const buildTasks = (userId: mongoose.Types.ObjectId) =>
+    Array.from({ length: 8 }, (_, i) => ({
+      title: `Task ${i + 1} — ${['Design', 'Implement', 'Review', 'Test', 'Deploy', 'Document', 'Refactor', 'Fix'][i]}`,
+      description: `Detailed description for task ${i + 1}`,
+      status: statuses[i % 3],
+      priority: priorities[i % 4],
+      userId,
+      order: i,
+      tags: ['sample', i % 2 === 0 ? 'frontend' : 'backend'],
+      dueDate: new Date(Date.now() + (i + 1) * 24 * 60 * 60 * 1000),
+    }))
+
+  await TaskModel.insertMany([...buildTasks(alice._id), ...buildTasks(bob._id)])
+
+  console.log('Seed complete: 2 users, 16 tasks')
+  process.exit(0)
 }
 
 seed().catch(err => {
