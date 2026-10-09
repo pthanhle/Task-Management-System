@@ -5,12 +5,15 @@ export const calculateChartPercentages = (total: number, counts: number[]) => {
 }
 
 export const getPriorityPeak = (priorityCounts: DashboardStats['priorityCounts'], total: number) => {
-  const peakVal = Math.max(priorityCounts.LOW, priorityCounts.MEDIUM, priorityCounts.HIGH)
+  const peakVal = Math.max(priorityCounts.LOW, priorityCounts.MEDIUM, priorityCounts.HIGH, priorityCounts.URGENT)
   let peakLabel = ''
   let peakPct = 0
   
   if (total > 0) {
-    if (peakVal === priorityCounts.HIGH) {
+    if (peakVal === priorityCounts.URGENT) {
+      peakLabel = 'Urgent Complexity'
+      peakPct = (priorityCounts.URGENT / total) * 100
+    } else if (peakVal === priorityCounts.HIGH) {
       peakLabel = 'High Complexity'
       peakPct = (priorityCounts.HIGH / total) * 100
     } else if (peakVal === priorityCounts.MEDIUM) {

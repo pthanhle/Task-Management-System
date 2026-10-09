@@ -12,6 +12,7 @@ export const PriorityChart = ({ stats }: Props) => {
   const lowPct = total === 0 ? 0 : (priorityCounts.LOW / total) * 100
   const medPct = total === 0 ? 0 : (priorityCounts.MEDIUM / total) * 100
   const highPct = total === 0 ? 0 : (priorityCounts.HIGH / total) * 100
+  const urgentPct = total === 0 ? 0 : (priorityCounts.URGENT / total) * 100
 
   const { peakLabel, peakPct } = getPriorityPeak(priorityCounts, total)
 
@@ -49,8 +50,15 @@ export const PriorityChart = ({ stats }: Props) => {
           label="High Priority" 
           count={priorityCounts.HIGH} 
           percentage={highPct} 
-          colorClass="bg-rose-600" 
-          gradientClass="bg-gradient-to-r from-rose-500 to-rose-600" 
+          colorClass="bg-rose-500" 
+          gradientClass="bg-gradient-to-r from-rose-400 to-rose-500" 
+        />
+        <PriorityBarItem 
+          label="Urgent Priority" 
+          count={priorityCounts.URGENT} 
+          percentage={urgentPct} 
+          colorClass="bg-fuchsia-600" 
+          gradientClass="bg-gradient-to-r from-fuchsia-500 to-fuchsia-600" 
         />
       </div>
 
