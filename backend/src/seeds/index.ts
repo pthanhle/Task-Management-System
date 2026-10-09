@@ -18,8 +18,8 @@ const seed = async () => {
   const pass2 = await hashPassword('123456')
 
   const [owner, member] = await UserModel.insertMany([
-    { email: 'user@example.com', password: pass1, fullName: 'John Owner' },
-    { email: 'user2@gmail.com', password: pass2, fullName: 'Jane Member' },
+    { email: 'user@example.com', password: pass1, fullName: 'John Owner', isEmailVerified: true },
+    { email: 'user2@gmail.com', password: pass2, fullName: 'Jane Member', isEmailVerified: true },
   ])
 
   const [workspace] = await WorkspaceModel.insertMany([
