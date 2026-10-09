@@ -11,6 +11,7 @@ export interface DashboardStats {
     LOW: number
     MEDIUM: number
     HIGH: number
+    URGENT: number
   }
 }
 
@@ -23,7 +24,7 @@ export interface AssigneeData {
 export interface UpcomingTask {
   id: string
   title: string
-  priority: 'LOW' | 'MEDIUM' | 'HIGH'
+  priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'
   dueDate: string
   assignee: AssigneeData
 }
