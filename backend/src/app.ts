@@ -14,6 +14,8 @@ import workspaceRouter from '@modules/workspaces/workspace.route'
 
 const app: Application = express()
 
+app.set('trust proxy', 1)
+
 app.use(helmet())
 app.use(cors({ origin: env.FRONTEND_URL, credentials: true }))
 app.use(morgan(env.NODE_ENV === 'production' ? 'combined' : 'dev'))
