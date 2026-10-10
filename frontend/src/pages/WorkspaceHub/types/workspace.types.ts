@@ -9,6 +9,8 @@ export interface Workspace {
   createdAt: string
   updatedAt: string
   role?: WorkspaceRole
+  memberCount?: number
+  activeTaskCount?: number
 }
 
 export interface GetWorkspacesQuery {

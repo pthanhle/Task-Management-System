@@ -53,12 +53,30 @@ export const getWorkspaces = async (
     WorkspaceModel.countDocuments(filter),
   ])
 
+  const paginatedWorkspaceIds = items.map((ws: any) => ws._id)
+
+  const [memberCounts, activeTaskCounts] = await Promise.all([
+    WorkspaceMemberModel.aggregate([
+      { $match: { workspaceId: { $in: paginatedWorkspaceIds } } },
+      { $group: { _id: "$workspaceId", count: { $sum: 1 } } }
+    ]),
+    TaskModel.aggregate([
+      { $match: { workspaceId: { $in: paginatedWorkspaceIds }, status: { $in: ['TODO', 'IN_PROGRESS'] } } },
+      { $group: { _id: "$workspaceId", count: { $sum: 1 } } }
+    ])
+  ])
+
   const workspacesWithRole = items.map((ws: any) => {
     const mem = memberships.find(m => m.workspaceId.toString() === ws._id.toString())
+    const memberCount = memberCounts.find(m => m._id.toString() === ws._id.toString())?.count || 0
+    const activeTaskCount = activeTaskCounts.find(t => t._id.toString() === ws._id.toString())?.count || 0
+    
     return {
       ...ws,
-      role: mem?.role || 'MEMBER'
-    } as IWorkspace & { role: string }
+      role: mem?.role || 'MEMBER',
+      memberCount,
+      activeTaskCount
+    } as IWorkspace & { role: string, memberCount: number, activeTaskCount: number }
   })
 
   return {

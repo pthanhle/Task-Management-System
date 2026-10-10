@@ -24,7 +24,7 @@ export const WorkspaceCard = ({ workspace, index, onEnter }: Props) => {
               <h3 className="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
                 {workspace.name}
               </h3>
-              <span className="text-xs text-slate-500 font-medium">Production Cluster</span>
+              <span className="text-xs text-slate-500 font-medium">Workspace</span>
             </div>
           </div>
           <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${getRoleColors(workspace.role || 'MEMBER')}`}>
@@ -41,9 +41,9 @@ export const WorkspaceCard = ({ workspace, index, onEnter }: Props) => {
         <div className="flex items-center justify-between text-slate-500">
           <div className="flex items-center gap-2 text-xs font-semibold">
             <Users size={16} className="text-indigo-500" />
-            <span>1 Members</span>
+            <span>{workspace.memberCount || 1} Members</span>
             <span className="text-slate-300">•</span>
-            <span>0 Active Tasks</span>
+            <span>{workspace.activeTaskCount || 0} Active Tasks</span>
           </div>
           <div className="w-8 h-8 rounded-full bg-slate-100 group-hover:bg-indigo-600 group-hover:text-white flex items-center justify-center transition-all text-slate-400">
             <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" />

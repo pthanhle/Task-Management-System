@@ -120,7 +120,23 @@ frontend/src/
 - **Real-time Aggregation**: MongoDB `$group` pipelines compute metrics dynamically without fetching raw documents into memory.
 - **Metrics**: Overdue counts, upcoming deadlines (next 7 days), completion rates, and priority distribution.
 
-## 5. System Requirements & Execution
+## 5. Feature Implementation Status
+
+### Completed Features (100% MVP)
+- **Account Management**: Registration, Login, Logout, Encrypted Passwords, Strict Data Isolation.
+- **Task CRUD**: Create, read, update, delete tasks with status and priority tracking.
+- **Search & Filter**: Debounced title search, status/priority filters, and pagination.
+- **Dashboard**: Task statistics, completion rates, and upcoming deadline tracking.
+- **Bonus - Kanban UI**: Drag-and-drop status transitions via `dnd-kit`.
+- **Bonus - Docker**: Fully containerized via Docker Compose.
+- **Bonus - API Docs**: Swagger OpenAPI integration.
+- **Bonus - Cloud Deployment**: Live demo hosted on Vercel and Render.
+- **Bonus - Architecture**: FSD Frontend, Modular Backend, Multi-tenancy Workspaces, RBAC.
+
+### Incomplete Features
+- **Bonus - Unit / Integration Tests**: Planned for future development phase.
+
+## 6. System Requirements & Execution
 
 **Requirements:** Docker 24.0+, Docker Compose v2.0+
 
@@ -132,16 +148,16 @@ docker compose up -d --build
 - Backend API: `http://localhost:5000/api/v1`
 - Swagger UI: `http://localhost:5000/api-docs`
 
-## 6. Environment Variables
+## 7. Environment Variables
 System relies on `.env` (refer to `.env.example`). When executed via Docker Compose, configurations for MongoDB URI, JWT secrets, and ports are automatically provisioned.
 
-## 7. Database Migration & Seeding
+## 8. Database Migration & Seeding
 Database provisions automatically on startup via `seeds/index.ts`.
 Includes:
 - 2 Workspaces with pre-configured RBAC.
 - 16 Sample tasks covering various statuses and priorities.
 - Test Accounts: `user2@gmail.com` (Owner) and `user@example.com` (Member). Password for both is `123456`.
 
-## 8. Deployment Guide
+## 9. Deployment Guide
 - **Frontend (Vercel)**: Set root to `frontend`. Inject `VITE_API_URL`.
 - **Backend (Render)**: Set root to `backend`. Build command: `npm ci --legacy-peer-deps && npm run build`. Start command: `npm run start`. Inject all variables from `.env.example`.
