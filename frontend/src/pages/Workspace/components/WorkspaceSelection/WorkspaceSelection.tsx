@@ -1,6 +1,6 @@
 import { Building2, MailOpen } from 'lucide-react'
 import { WorkspaceSelectionCard } from './WorkspaceSelectionCard'
-import { SELECTION_OPTIONS } from '../../data/workspace.mock'
+import { SELECTION_OPTIONS } from '../../constants/workspace.constants'
 
 interface Props {
   onSelectCreate: () => void

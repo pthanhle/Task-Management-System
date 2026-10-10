@@ -1,7 +1,7 @@
 import { ArrowLeft, MailOpen, RefreshCw, CheckCircle2 } from 'lucide-react'
 import { useCheckInvites } from '../../hooks/useCheckInvites'
-import { MOCK_USER_IDENTITY } from '../../data/workspace.mock'
 import { WORKSPACE_TEXTS } from '../../constants/workspace.constants'
+import { useAppSelector } from '@/store/hooks'
 
 interface Props {
   onBack: () => void
@@ -9,6 +9,7 @@ interface Props {
 
 export const WorkspaceInviteWait = ({ onBack }: Props) => {
   const { isChecking, hasChecked, checkInvites } = useCheckInvites()
+  const user = useAppSelector(state => state.auth.user)
 
   return (
     <div className="max-w-xl mx-auto mt-8 w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -38,7 +39,7 @@ export const WorkspaceInviteWait = ({ onBack }: Props) => {
         <div className="mt-6 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-white/50 border border-white/80 shadow-sm">
           <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.6)]"></span>
           <span className="text-xs text-slate-500">{WORKSPACE_TEXTS.invite.loggedInAs}</span>
-          <span className="text-xs font-semibold text-slate-900">{MOCK_USER_IDENTITY.email}</span>
+          <span className="text-xs font-semibold text-slate-900">{user?.email || 'User'}</span>
         </div>
 
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">

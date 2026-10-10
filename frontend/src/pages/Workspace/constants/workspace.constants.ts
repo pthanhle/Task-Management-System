@@ -28,3 +28,22 @@ export const WORKSPACE_TEXTS = {
     noInvitesMsg: 'No pending invites found for this email.',
   }
 } as const
+
+export const SELECTION_OPTIONS = [
+  {
+    id: 'create',
+    iconName: 'Building2',
+    title: 'Create a Workspace',
+    description: 'Start fresh. Create a new workspace for your team and manage roles.',
+    actionText: 'Create Workspace',
+    colorTheme: 'indigo'
+  },
+  {
+    id: 'invite',
+    iconName: 'MailOpen',
+    title: 'Join a Workspace',
+    description: 'Wait for an invite link from an admin to join their workspace.',
+    actionText: 'Check Invites',
+    colorTheme: 'violet'
+  }
+] as const
